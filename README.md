@@ -4,6 +4,34 @@
 забирает ветку `master` и импортирует каждый каталог `problems/<id>/`. Имя каталога — постоянный ID
 задачи (`[A-Za-z0-9._-]`), его нельзя менять после публикации.
 
+## Задачи
+
+| № | Задача | Формат | Сложность | `gpu-cuda` | `cuda-sim` | `rtl` | `riscv-rvv` | `coral-npu` |
+|---|---|---|---|:-:|:-:|:-:|:-:|:-:|
+| 1 | [Vector Addition](problems/vector-addition/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 2 | [Matrix Multiplication](problems/matrix-multiplication/statement.md) | обычная | medium | ✓ |  | ✓ | ✓ | ✓ |
+| 3 | [Prefix Sum](problems/prefix-sum/statement.md) | обычная | easy |  |  | ✓ |  |  |
+| 4 | [Dot Product](problems/dot-product/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 5 | [Hamming Distance](problems/hamming-distance/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 6 | [Byte Histogram](problems/byte-histogram/statement.md) | обычная | medium | ✓ | ✓ |  | ✓ | ✓ |
+| 7 | [Matrix Transpose](problems/matrix-transpose/statement.md) | обычная | medium | ✓ | ✓ |  | ✓ | ✓ |
+| 8 | [Greatest Common Divisor](problems/gcd/statement.md) | обычная | easy |  |  | ✓ | ✓ | ✓ |
+| 9 | [Speed Up the Transpose](problems/transpose-optimize/statement.md) | оптимизация | medium |  |  |  | ✓ |  |
+| 10 | [Speed Up the Bit Count](problems/hamming-optimize/statement.md) | оптимизация | easy |  |  |  |  | ✓ |
+| 11 | [Rows or Columns](problems/guess-matrix-walk/statement.md) | угадывание | easy |  |  |  | ✓ |  |
+| 12 | [One Instruction or Thirty-Two Lanes](problems/guess-bit-count/statement.md) | угадывание | medium |  |  |  |  | ✓ |
+| 13 | [Scale and Add](problems/axpy/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 14 | [Clamp](problems/clamp/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 15 | [Mirror the Bits](problems/bit-reverse/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 16 | [Maximum](problems/array-maximum/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 17 | [Shades of Gray](problems/rgb-to-gray/statement.md) | обычная | easy | ✓ |  | ✓ | ✓ | ✓ |
+| 18 | [Three-Point Stencil](problems/three-point-sum/statement.md) | обычная | easy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 19 | [Collatz Steps](problems/collatz-steps/statement.md) | обычная | medium | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 20 | [Matrix Times Vector](problems/matrix-vector/statement.md) | обычная | medium | ✓ | ✓ |  | ✓ | ✓ |
+| | **Всего задач** | | | **14** | **12** | **13** | **17** | **17** |
+
+## Формат пакета
+
 ```
 problems/vector-addition/
   statement.md     условие с YAML-шапкой

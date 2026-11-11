@@ -1,0 +1,23 @@
+{
+  "id": "matrix-vector",
+  "allowCustomTests": true,
+  "signature": {
+    "function": "solve",
+    "params": [
+      {"name": "A", "type": "INT32", "role": "INPUT", "memory": "DEVICE", "size": "N*M"},
+      {"name": "X", "type": "INT32", "role": "INPUT", "memory": "DEVICE", "size": "M"},
+      {"name": "Y", "type": "INT64", "role": "OUTPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "N", "type": "INT32", "role": "SCALAR"},
+      {"name": "M", "type": "INT32", "role": "SCALAR"}
+    ]
+  },
+  "checker": {"mode": "EXACT"},
+  "limits": {"timeLimitMs": 1000, "memoryLimitMb": 4096, "gpuMemoryLimitMb": 2048},
+  "timing": {"warmupRuns": 1, "maxRuns": 3},
+  "processors": [
+    {"id": "gpu-cuda", "languages": ["cuda"]},
+    {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 7000000},
+    {"id": "cuda-sim", "languages": ["cuda"], "limit": 52000},
+    {"id": "coral-npu", "languages": ["c", "cpp"], "limit": 180000}
+  ]
+}

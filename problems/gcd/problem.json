@@ -1,0 +1,20 @@
+{
+  "id": "gcd",
+  "allowCustomTests": true,
+  "signature": {
+    "function": "solve",
+    "params": [
+      {"name": "A", "type": "UINT32", "role": "INPUT", "memory": "HOST", "size": "N"},
+      {"name": "B", "type": "UINT32", "role": "INPUT", "memory": "HOST", "size": "N"},
+      {"name": "C", "type": "UINT32", "role": "OUTPUT", "memory": "HOST", "size": "N"},
+      {"name": "N", "type": "INT32", "role": "SCALAR"}
+    ]
+  },
+  "checker": {"mode": "EXACT"},
+  "limits": {"memoryLimitMb": 1024},
+  "processors": [
+    {"id": "rtl", "languages": ["systemverilog"], "limit": 10000000000},
+    {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 6000000},
+    {"id": "coral-npu", "languages": ["c", "cpp"], "limit": 220000}
+  ]
+}

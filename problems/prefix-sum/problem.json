@@ -1,0 +1,16 @@
+{
+  "id": "prefix-sum",
+  "signature": {
+    "function": "solve",
+    "params": [
+      {"name": "A", "type": "INT32", "role": "INPUT", "memory": "HOST", "size": "N"},
+      {"name": "C", "type": "INT32", "role": "OUTPUT", "memory": "HOST", "size": "N"},
+      {"name": "N", "type": "INT32", "role": "SCALAR"}
+    ]
+  },
+  "checker": {"mode": "EXACT"},
+  "limits": {"memoryLimitMb": 1024},
+  "processors": [
+    {"id": "rtl", "languages": ["systemverilog"], "limit": 3500000000, "rtl": {"dataMode": "STREAM"}}
+  ]
+}

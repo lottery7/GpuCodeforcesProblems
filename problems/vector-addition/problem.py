@@ -27,3 +27,8 @@ def generate(test, gen, device):
 
 def reference(test, inputs):
     return {"C": inputs["A"] + inputs["B"]}
+
+
+def validate_input(test, inputs):
+    return test["N"] >= 1 and all(
+        bool(torch.isfinite(value).all() and (value >= 0).all() and (value < 1).all()) for value in inputs.values())

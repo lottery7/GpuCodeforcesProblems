@@ -11,6 +11,8 @@ problems/vector-addition/
   problem.py       генератор тестов и эталон
   starter.cu       шаблон решения на CUDA (необязательно)
   starter.rtl.sv   шаблоны других процессоров: starter.<процессор><расширение языка> (необязательно)
+  format.json      формат задачи: optimization или guess (необязательно, без него задача обычная)
+  first.c second.c два кода задачи формата guess, расширение - по её языку
 ```
 
 Полное описание формата — [docs/backend/problem-package.md](https://github.com/lottery7/GpuCodeforces/blob/master/docs/backend/problem-package.md)
@@ -35,6 +37,16 @@ problems/vector-addition/
   28 КБ на нём не пройдёт никто. У каждого
   процессора нужен хотя бы один замерный тест.
 - Без шаблона шаблоном станет пустое решение с подсказкой, построенное по сигнатуре.
+- Форматы ([docs/backend/formats.md](https://github.com/lottery7/GpuCodeforces/blob/master/docs/backend/formats.md)):
+  в `optimization` шаблон каждого процессора - рабочее исходное решение, которое участник ускоряет
+  (`transpose-optimize`, `hamming-optimize`); в `guess` у задачи один процессор и один язык, а в пакете лежат два
+  кода `first` и `second` и объяснение в `format.json` (`guess-matrix-walk`, `guess-bit-count`). Исходное решение и
+  оба варианта платформа измеряет сама; объяснение должно совпадать с тем, что она намерит, а замерные тесты -
+  быть достаточно большими: у крошечного теста ответ случаен. Тест с `"measure": False` в результат не входит.
+- Взломы ([docs/backend/participation.md](https://github.com/lottery7/GpuCodeforces/blob/master/docs/backend/participation.md)):
+  `"allowCustomTests": true` в `problem.json` и функция `validate_input(test, inputs)` в `problem.py`, которая
+  возвращает `True` только для теста в ограничениях условия. Включены у обычных задач банка, кроме
+  `matrix-multiplication` и `prefix-sum`.
 
 Задача с ошибкой в пакете не попадёт в банк, причина видна в логе backend. Проверка из корня репозитория
 платформы (нужны поднятый судья, `docker compose --profile judge up -d --wait`, и torch для числа тестов по

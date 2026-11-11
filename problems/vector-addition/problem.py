@@ -13,6 +13,8 @@ def tests():
     yield {"name": "n-100000", "scalars": {"N": 100_000}, "seed": 6, "processors": ["riscv-rvv", "cuda-sim"]}
     for seed, n in enumerate([1_000_000, 10_000_000], start=4):
         yield {"name": f"n-{n}", "scalars": {"N": n}, "seed": seed, "processors": ["gpu-cuda"]}
+    # the Coral NPU core has 32 KB of data memory for everything: three arrays of 8000 bytes fit, larger ones do not
+    yield {"name": "n-2000", "scalars": {"N": 2000}, "seed": 7, "processors": ["coral-npu"]}
 
 
 def generate(test, gen, device):

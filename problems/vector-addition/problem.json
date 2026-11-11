@@ -16,6 +16,7 @@
     {"id": "gpu-cuda", "languages": ["cuda"]},
     {"id": "rtl", "languages": ["systemverilog"], "limit": 20000000000},
     {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 10000000},
-    {"id": "cuda-sim", "languages": ["cuda"], "limit": 50000}
+    {"id": "cuda-sim", "languages": ["cuda"], "limit": 50000},
+    {"id": "coral-npu", "languages": ["c", "cpp"], "limit": 40000}
   ]
 }

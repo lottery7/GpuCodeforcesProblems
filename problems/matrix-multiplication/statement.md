@@ -6,7 +6,8 @@ tags: [matrix, arithmetic]
 authors: []
 ---
 
-Implement matrix multiplication: on the GPU (`gpu-cuda`), as a circuit (`rtl`) or on a vector RISC-V CPU (`riscv-rvv`).
+Implement matrix multiplication: on the GPU (`gpu-cuda`), as a circuit (`rtl`), on a vector RISC-V CPU (`riscv-rvv`)
+or on the Coral NPU core (`coral-npu`).
 
 Given two dense matrices `A` (M×K) and `B` (K×N), stored row by row, compute the product
 `C = A × B` (M×N, row by row).
@@ -32,6 +33,15 @@ smaller is better. The circuit must be synchronous: no latches, no asynchronous 
 The same `solve` in C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors; `A`, `B` and `C` are in ordinary
 memory. The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss: smaller is better.
 
+## On the Coral NPU (`coral-npu`)
+
+The same `solve` in C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x,
+Zve32f), no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data;
+`A`, `B` and `C` lie in that data memory, next to the globals and the stack of the solution, so there is little room
+for copies of the matrices. The score is the instructions the core executed: smaller is better. In C++ declare the
+sizes as `int32_t`, as the solution template does: on this target `int32_t` is `long`, and a `solve` taking `int`
+would be another function.
+
 ## Example
 
 `M = 2, K = 3, N = 2`, `A = [[1, 2, 3], [4, 5, 6]]`, `B = [[1, 0], [0, 1], [1, 1]]`,
@@ -39,6 +49,7 @@ answer `C = [[4, 5], [10, 11]]`.
 
 ## Constraints
 
-- 1 ≤ M, K, N ≤ 1000 on the GPU, 1 ≤ M, K, N ≤ 64 on `rtl`, 1 ≤ M, K, N ≤ 128 on `riscv-rvv`;
+- 1 ≤ M, K, N ≤ 1000 on the GPU, 1 ≤ M, K, N ≤ 64 on `rtl`, 1 ≤ M, K, N ≤ 128 on `riscv-rvv`, 1 ≤ M, K, N ≤ 48 on
+  `coral-npu`;
 - the elements of `A` and `B` are in [0, 1);
 - the answer is compared with absolute and relative tolerance `1e-3`.

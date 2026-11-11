@@ -6,8 +6,8 @@ tags: [vector, arithmetic]
 authors: []
 ---
 
-Implement vector addition: on the GPU (`gpu-cuda`), on a simulated GPU (`cuda-sim`), as a circuit (`rtl`) or on a
-vector RISC-V CPU (`riscv-rvv`).
+Implement vector addition: on the GPU (`gpu-cuda`), on a simulated GPU (`cuda-sim`), as a circuit (`rtl`), on a
+vector RISC-V CPU (`riscv-rvv`) or on the Coral NPU core (`coral-npu`).
 
 Given two input vectors `A` and `B` of `N` floats, calculate:
 
@@ -43,6 +43,14 @@ smaller is better. The circuit must be synchronous: no latches, no asynchronous 
 The same `solve` in C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors; `A`, `B` and `C` are in ordinary
 memory. The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss: smaller is better.
 
+## On the Coral NPU (`coral-npu`)
+
+The same `solve` in C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x,
+Zve32f), no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data;
+`A`, `B` and `C` lie in that data memory, next to the globals and the stack of the solution. The score is the
+instructions the core executed: smaller is better. In C++ declare `N` as `int32_t`, as the solution template does: on
+this target `int32_t` is `long`, and a `solve` taking `int` would be another function.
+
 ## Example
 
 | A | B | C |
@@ -51,6 +59,7 @@ memory. The score is the instructions executed plus 10 per L1 miss and 100 per L
 
 ## Constraints
 
-- 1 ≤ N ≤ 10 000 000 on the GPU, 1 ≤ N ≤ 4096 on `rtl`, 1 ≤ N ≤ 100 000 on `riscv-rvv`;
+- 1 ≤ N ≤ 10 000 000 on the GPU, 1 ≤ N ≤ 4096 on `rtl`, 1 ≤ N ≤ 100 000 on `riscv-rvv`, 1 ≤ N ≤ 2000 on
+  `coral-npu`;
 - the inputs are in [0, 1);
 - the answer is compared with absolute and relative tolerance `1e-6`.

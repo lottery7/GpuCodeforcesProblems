@@ -11,8 +11,6 @@ problems/vector-addition/
   problem.py       генератор тестов и эталон
   starter.cu       шаблон решения на CUDA (необязательно)
   starter.rtl.sv   шаблоны других процессоров: starter.<процессор><расширение языка> (необязательно)
-author-solutions/<задача>/<процессор>.<расширение>
-                   решения автора: судья должен принимать их в пределах limit (банк их не импортирует)
 ```
 
 Полное описание формата — [docs/backend/problem-package.md](https://github.com/lottery7/GpuCodeforces/blob/master/docs/backend/problem-package.md)
@@ -42,7 +40,7 @@ author-solutions/<задача>/<процессор>.<расширение>
 ```sh
 python3 judge/tools/judge_cli.py validate ../GpuCodeforcesProblems/problems/prefix-sum
 python3 judge/tools/judge_cli.py submit ../GpuCodeforcesProblems/problems/prefix-sum \
-    ../GpuCodeforcesProblems/author-solutions/prefix-sum/rtl.sv --processor rtl --watch
+    solution.sv --processor rtl --watch
 ```
 
 Генератор отдельно (`--processor` — только тесты этого процессора):

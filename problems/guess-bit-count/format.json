@@ -1,0 +1,8 @@
+{
+  "format": "guess",
+  "explanation": "cpop counts the bits of a word in one instruction, yet the loop around it still loads, xors, counts and adds one word per iteration. The second code spends more instructions on a step - shifts, masks and a multiplication - but each of them works on 32 words at once: eight 128-bit registers grouped together hold 32 lanes. It executes about a tenth of the instructions of the first. A special instruction for one word loses to ordinary instructions over a vector.",
+  "benchmark": {
+    "inputDescription": "Arrays of 1024 and 3000 random 32-bit words",
+    "aggregation": "geometric_mean"
+  }
+}

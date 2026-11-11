@@ -1,0 +1,7 @@
+{
+  "format": "optimization",
+  "benchmark": {
+    "inputDescription": "Arrays of 1024 and 3000 random 32-bit words",
+    "aggregation": "geometric_mean"
+  }
+}

@@ -6,10 +6,13 @@
 
 ```
 problems/vector-addition/
-  statement.md   условие с YAML-шапкой
-  problem.json   описание задачи для судьи (без генератора)
-  problem.py     генератор тестов и эталон
-  starter.cu     шаблон решения (необязательно)
+  statement.md     условие с YAML-шапкой
+  problem.json     описание задачи для судьи (без генератора), в том числе процессоры
+  problem.py       генератор тестов и эталон
+  starter.cu       шаблон решения на CUDA (необязательно)
+  starter.rtl.sv   шаблоны других процессоров: starter.<процессор><расширение языка> (необязательно)
+author-solutions/<задача>/<процессор>.<расширение>
+                   решения автора: судья должен принимать их в пределах limit (банк их не импортирует)
 ```
 
 Полное описание формата — [docs/backend/problem-package.md](https://github.com/lottery7/GpuCodeforces/blob/master/docs/backend/problem-package.md)
@@ -19,16 +22,31 @@ problems/vector-addition/
 - `statement.md`: `code` (номер в банке), `title`, `difficulty` (`easy`/`medium`/`hard`), `tags`,
   `authors` (ники на платформе; черновик `draft: true` видят только они), затем условие в Markdown.
 - `problem.json`: сигнатура `solve` (тип, роль и размер каждого массива, где он лежит — `DEVICE`/`HOST`),
-  допуски сравнения, лимиты времени и памяти, флаги компиляции и запреты.
+  допуски сравнения, лимиты времени и памяти, флаги компиляции и запреты, а также `processors` — на каких
+  процессорах и языках сдаётся задача и лимит score на каждом: `gpu-cuda` (мс, по умолчанию
+  `limits.timeLimitMs`), `rtl` (такты × глубина логики × транзисторы схемы, у `rtl` ещё `readPorts` и `dataMode`
+  `MEMORY`/`STREAM`), `riscv-rvv` (инструкции + 10 × промахи L1 + 100 × промахи L2), `cuda-sim` (такты GPGPU-Sim).
+  Без `processors` задача сдаётся только на `gpu-cuda`.
 - `problem.py`: `tests()` перечисляет тесты (открытый пример — `sample: True` с рукописными входами и
-  ответом), `generate()` создаёт входы, `reference()` считает эталонный ответ (Python + PyTorch).
-- Без `starter.cu` шаблоном станет пустая `solve` с подсказкой.
+  ответом), `generate()` создаёт входы, `reference()` считает эталонный ответ (Python + PyTorch). У теста
+  можно указать `"processors": [...]` — на каких процессорах он идёт (без поля — на всех процессорах задачи), и
+  `"measure": False` — только проверка ответа, без score. Эмуляторы медленные, поэтому для них тесты маленькие
+  (тысячи элементов для `rtl`, сотни тысяч для `riscv-rvv` и `cuda-sim`), а большие — только для `gpu-cuda`. У каждого
+  процессора нужен хотя бы один замерный тест.
+- Без шаблона шаблоном станет пустое решение с подсказкой, построенное по сигнатуре.
 
-Задача с ошибкой в пакете не попадёт в банк, причина видна в логе backend. Генератор можно проверить
-локально (нужен torch), из корня репозитория платформы:
+Задача с ошибкой в пакете не попадёт в банк, причина видна в логе backend. Проверка из корня репозитория
+платформы (нужны поднятый судья, `docker compose --profile judge up -d --wait`, и torch для числа тестов по
+процессорам):
 
 ```sh
-PYTHONPATH=judge/pytools python3 -m judge_problem.prepare --spec spec.json --source problem.py --out /tmp/out
+python3 judge/tools/judge_cli.py validate ../GpuCodeforcesProblems/problems/prefix-sum
+python3 judge/tools/judge_cli.py submit ../GpuCodeforcesProblems/problems/prefix-sum \
+    ../GpuCodeforcesProblems/author-solutions/prefix-sum/rtl.sv --processor rtl --watch
 ```
 
-где `spec.json` — `{"signature": ...}` из `problem.json`.
+Генератор отдельно (`--processor` — только тесты этого процессора):
+
+```sh
+PYTHONPATH=judge/pytools python3 -m judge_problem.prepare --spec problem.json --source problem.py --out /tmp/out --processor rtl
+```

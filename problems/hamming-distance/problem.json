@@ -1,0 +1,23 @@
+{
+  "id": "hamming-distance",
+  "allowCustomTests": true,
+  "signature": {
+    "function": "solve",
+    "params": [
+      {"name": "A", "type": "UINT32", "role": "INPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "B", "type": "UINT32", "role": "INPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "R", "type": "UINT32", "role": "OUTPUT", "memory": "DEVICE", "size": "1"},
+      {"name": "N", "type": "INT32", "role": "SCALAR"}
+    ]
+  },
+  "checker": {"mode": "EXACT"},
+  "limits": {"timeLimitMs": 1000, "memoryLimitMb": 4096, "gpuMemoryLimitMb": 2048},
+  "timing": {"warmupRuns": 1, "maxRuns": 3},
+  "processors": [
+    {"id": "gpu-cuda", "languages": ["cuda"]},
+    {"id": "rtl", "languages": ["systemverilog"], "limit": 750000000, "rtl": {"dataMode": "STREAM"}},
+    {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 15000000},
+    {"id": "cuda-sim", "languages": ["cuda"], "limit": 35000},
+    {"id": "coral-npu", "languages": ["c", "cpp"], "limit": 60000}
+  ]
+}

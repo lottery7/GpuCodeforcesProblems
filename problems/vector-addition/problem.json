@@ -1,5 +1,6 @@
 {
   "id": "vector-addition",
+  "allowCustomTests": true,
   "signature": {
     "function": "solve",
     "params": [

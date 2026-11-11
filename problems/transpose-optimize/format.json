@@ -1,0 +1,7 @@
+{
+  "format": "optimization",
+  "benchmark": {
+    "inputDescription": "Matrices of 1024 x 1024 and 700 x 1000 floats: neither fits the 1 MiB L2 cache of the model",
+    "aggregation": "geometric_mean"
+  }
+}

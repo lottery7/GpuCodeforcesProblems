@@ -17,6 +17,7 @@
   "processors": [
     {"id": "gpu-cuda", "languages": ["cuda"]},
     {"id": "rtl", "languages": ["systemverilog"], "limit": 10000000000000},
-    {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 100000000}
+    {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 100000000},
+    {"id": "coral-npu", "languages": ["c", "cpp"], "limit": 1700000}
   ]
 }

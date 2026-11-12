@@ -24,7 +24,7 @@ afterwards. A blur, a heat equation and a finite difference are all this loop; t
 
 ## On the GPU simulator (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
+The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Quadro V100 (QV100). The score is the simulated GPU
 cycles: smaller is better. `cudaMemcpy*` and warp shuffles (`__shfl_*_sync`) are not allowed in the solution.
 
 ## As a circuit (`rtl`)

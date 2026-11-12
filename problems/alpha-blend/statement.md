@@ -34,7 +34,7 @@ void solve(const uint8_t* A, const uint8_t* B, const uint8_t* T, uint8_t* C, int
 
 ## На симуляторе GPU (`cuda-sim`)
 
-Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Tesla V100 (QV100). Score — число тактов
+Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Quadro V100 (QV100). Score — число тактов
 симулируемой видеокарты: чем меньше, тем лучше. `cudaMemcpy*` и обмен между потоками варпа (`__shfl_*_sync`)
 в решении запрещены. Сумму двух произведений байтов компилятор сворачивает в инструкцию `dp2a`, которой в GPGPU-Sim
 нет: решение, где формула записана дословно, получит здесь `RUNTIME_ERROR`. Перепишите её так, чтобы умножение

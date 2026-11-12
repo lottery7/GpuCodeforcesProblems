@@ -25,7 +25,7 @@ Nothing is computed here, the elements only move: the whole cost is in the order
 
 ## On the GPU simulator (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
+The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Quadro V100 (QV100). The score is the simulated GPU
 cycles: smaller is better. `cudaMemcpy*` is not allowed in the solution, the data is already on the GPU.
 
 ## On RISC-V (`riscv-rvv`)

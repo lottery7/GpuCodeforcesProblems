@@ -30,7 +30,7 @@ void solve(const uint32_t* A, const uint32_t* B, uint32_t* R, int N);
 
 ## На симуляторе GPU (`cuda-sim`)
 
-Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Tesla V100 (QV100). Score — число тактов симулируемой
+Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Quadro V100 (QV100). Score — число тактов симулируемой
 видеокарты: чем меньше, тем лучше. `cudaMemcpy*` и обмен между потоками варпа (`__shfl_*_sync`) в решении запрещены.
 
 ## Как схема (`rtl`)

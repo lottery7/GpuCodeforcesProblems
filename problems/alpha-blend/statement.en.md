@@ -31,7 +31,7 @@ its divisor is always the same.
 
 ## On the GPU simulator (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
+The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Quadro V100 (QV100). The score is the simulated GPU
 cycles: smaller is better. `cudaMemcpy*` and warp shuffles (`__shfl_*_sync`) are not allowed in the solution. The
 compiler folds a sum of two products of bytes into the `dp2a` instruction, which GPGPU-Sim does not have: a solution
 with the formula written word for word gets `RUNTIME_ERROR` here. Rewrite it so that one multiplication is left.

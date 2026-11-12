@@ -32,7 +32,7 @@ threads, vectors and the cache has to be decided anew on every processor.
 
 ## On the GPU simulator (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
+The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Quadro V100 (QV100). The score is the simulated GPU
 cycles: smaller is better. `cudaMemcpy*` and warp shuffles (`__shfl_*_sync`) are not allowed in the solution. The
 cycles of the simulator are time, not the amount of work: the threads compute at the same time, but a long chain
 of divisions or memory accesses in one thread is expensive. The cheapest solution here may be built differently

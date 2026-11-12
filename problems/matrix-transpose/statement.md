@@ -29,7 +29,7 @@ void solve(const float* A, float* B, int N, int M);
 
 ## На симуляторе GPU (`cuda-sim`)
 
-Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Tesla V100 (QV100). Score — число тактов симулируемой
+Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Quadro V100 (QV100). Score — число тактов симулируемой
 видеокарты: чем меньше, тем лучше. `cudaMemcpy*` в решении запрещён: данные уже лежат на видеокарте.
 
 ## На RISC-V (`riscv-rvv`)

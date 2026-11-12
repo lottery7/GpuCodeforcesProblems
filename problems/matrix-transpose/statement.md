@@ -1,54 +1,53 @@
 ---
 code: "7"
-title: Matrix Transpose
+title: Транспонирование матрицы
 difficulty: medium
 tags: [matrix, memory]
 authors: []
 ---
 
-Transpose a matrix: on the GPU (`gpu-cuda`), on a simulated GPU (`cuda-sim`), on a vector RISC-V CPU (`riscv-rvv`)
-or on the Coral NPU core (`coral-npu`).
+Транспонируйте матрицу: на видеокарте (`gpu-cuda`), на её симуляторе (`cuda-sim`), на векторном процессоре RISC-V
+(`riscv-rvv`) или на ядре Coral NPU (`coral-npu`).
 
-Given a matrix `A` of `N` rows and `M` columns, stored row by row, fill the matrix `B` of `M` rows and `N` columns,
-stored row by row too:
+Дана матрица `A` из `N` строк и `M` столбцов, записанная по строкам. Заполните матрицу `B` из `M` строк и `N`
+столбцов, тоже записанную по строкам:
 
 ```
 B[j * N + i] = A[i * M + j],    0 ≤ i < N, 0 ≤ j < M
 ```
 
-Implement the function
+Реализуйте функцию
 
 ```cpp
 void solve(const float* A, float* B, int N, int M);
 ```
 
-`A` and `B` point to GPU memory. `solve` runs on the CPU: it launches a kernel and returns, the judge synchronizes
-afterwards.
+`A` и `B` лежат в памяти GPU. `solve` выполняется на CPU: она запускает ядро и возвращается, проверяющая система сама
+дожидается его завершения.
 
-Nothing is computed here, the elements only move: the whole cost is in the order they are read and written.
+Здесь ничего не вычисляется, элементы только переезжают: вся цена — в порядке, в котором их читают и пишут.
 
-## On the GPU simulator (`cuda-sim`)
+## На симуляторе GPU (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
-cycles: smaller is better. `cudaMemcpy*` is not allowed in the solution, the data is already on the GPU.
+Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Tesla V100 (QV100). Score — число тактов симулируемой
+видеокарты: чем меньше, тем лучше. `cudaMemcpy*` в решении запрещён: данные уже лежат на видеокарте.
 
-## On RISC-V (`riscv-rvv`)
+## На RISC-V (`riscv-rvv`)
 
-The same `solve` in C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors; the matrices are in ordinary memory.
-The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss: smaller is better. The cache model
-has a 32 KiB L1 and a 1 MiB L2 with 64-byte lines; the large matrices of the tests fit neither, so a walk that reads
-rows and writes columns misses on almost every element.
+Та же `solve` на C, C++ или ассемблере RISC-V для RV64GCV с векторами по 256 бит; матрицы лежат в обычной памяти.
+Score — число выполненных инструкций плюс 10 за каждый промах кэша L1 и 100 за каждый промах L2: чем меньше, тем
+лучше. В модели кэша L1 на 32 КиБ и L2 на 1 МиБ с линиями по 64 байта; большие матрицы из тестов не помещаются
+ни в один из них, поэтому обход, который читает строки и пишет столбцы, промахивается почти на каждом элементе.
 
-## On the Coral NPU (`coral-npu`)
+## На Coral NPU (`coral-npu`)
 
-The same `solve` in C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x,
-Zve32f), no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data;
-`A` and `B` lie in that data memory. There are no caches: the score is the instructions the core executed, smaller
-is better, and a vector load or store may step through memory with any stride. In C++ declare `N` and `M` as
-`int32_t`, as the solution template does: on this target `int32_t` is `long`, and a `solve` taking `int` would be
-another function.
+Та же `solve` на C или C++ для ядра Coral NPU без операционной системы: RV32IMF с Zbb и векторами по 128 бит (Zve32x,
+Zve32f), стандартной библиотеки C++ нет. У ядра 8 КБ памяти под код и 32 КБ под данные; `A` и `B` лежат в этой памяти
+данных. Кэшей нет: score — число инструкций, выполненных ядром, чем меньше, тем лучше, а векторная загрузка или запись
+может идти по памяти с любым шагом. В C++ объявляйте `N` и `M` как `int32_t`, как в шаблоне решения: на этой платформе
+`int32_t` — это `long`, и `solve` с параметром `int` будет другой функцией.
 
-## Example
+## Пример
 
 `N = 2`, `M = 3`:
 
@@ -56,9 +55,9 @@ another function.
 | --- | --- |
 | 1 2 3 4 5 6 | 1 4 2 5 3 6 |
 
-## Constraints
+## Ограничения
 
-- N × M ≤ 16 777 216 on the GPU, N × M ≤ 1 048 576 on `riscv-rvv`, N × M ≤ 51 200 on `cuda-sim`,
-  N × M ≤ 3360 on `coral-npu`; N, M ≥ 1;
-- the elements are in [0, 1);
-- the answer is compared exactly.
+- N × M ≤ 16 777 216 на видеокарте, N × M ≤ 1 048 576 на `riscv-rvv`, N × M ≤ 51 200 на `cuda-sim`,
+  N × M ≤ 3360 на `coral-npu`; N, M ≥ 1;
+- элементы лежат в [0, 1);
+- ответ сравнивается точно.

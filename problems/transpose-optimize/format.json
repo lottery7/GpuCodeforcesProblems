@@ -1,7 +1,8 @@
 {
   "format": "optimization",
   "benchmark": {
-    "inputDescription": "Matrices of 1024 x 1024 and 700 x 1000 floats: neither fits the 1 MiB L2 cache of the model",
+    "inputDescription": "Матрицы 1024 × 1024 и 700 × 1000 из float: ни одна не помещается в кэш L2 модели, в котором 1 МиБ",
+    "inputDescriptionEn": "Matrices of 1024 x 1024 and 700 x 1000 floats: neither fits the 1 MiB L2 cache of the model",
     "aggregation": "geometric_mean"
   }
 }

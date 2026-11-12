@@ -1,68 +1,69 @@
 ---
 code: "18"
-title: Three-Point Stencil
+title: Трёхточечный шаблон
 difficulty: easy
 tags: [stencil, vector]
 authors: []
 ---
 
-Add every element to its two neighbours: on the GPU (`gpu-cuda`), on a simulated GPU (`cuda-sim`), as a circuit (`rtl`), on a vector RISC-V CPU
-(`riscv-rvv`) or on the Coral NPU core (`coral-npu`).
+Сложите каждый элемент с двумя его соседями: на видеокарте (`gpu-cuda`), на её симуляторе (`cuda-sim`), как схему
+(`rtl`), на векторном процессоре RISC-V (`riscv-rvv`) или на ядре Coral NPU (`coral-npu`).
 
-Given `N` integers `A`, calculate
+Даны `N` целых чисел `A`. Вычислите
 
 ```
 C[i] = A[i-1] + A[i] + A[i+1]
 ```
 
-where the neighbours that do not exist, `A[-1]` and `A[N]`, count as zero.
+где несуществующие соседи, `A[-1]` и `A[N]`, считаются равными нулю.
 
-Implement the function
+Реализуйте функцию
 
 ```cpp
 void solve(const int* A, int* C, int N);
 ```
 
-`A` and `C` point to GPU memory. `solve` runs on the CPU: it launches a kernel and returns, the judge synchronizes
-afterwards. A blur, a heat equation and a finite difference are all this loop; the edges are where the bugs live.
+`A` и `C` лежат в памяти GPU. `solve` выполняется на CPU: она запускает ядро и возвращается, проверяющая система сама
+дожидается его завершения. Размытие, уравнение теплопроводности и конечная разность — всё это один и тот же цикл;
+ошибки живут на краях.
 
-## On the GPU simulator (`cuda-sim`)
+## На симуляторе GPU (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
-cycles: smaller is better. `cudaMemcpy*` and warp shuffles (`__shfl_*_sync`) are not allowed in the solution.
+Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Tesla V100 (QV100). Score — число тактов симулируемой
+видеокарты: чем меньше, тем лучше. `cudaMemcpy*` и обмен между потоками варпа (`__shfl_*_sync`) в решении запрещены.
 
-## As a circuit (`rtl`)
+## Как схема (`rtl`)
 
-The submission is a SystemVerilog module `solve` with the input `N` and two streams. The judge raises `start` for
-the first cycle and from the next cycle on feeds one element per cycle: `A_data` holds `A[i]` while `A_valid` is
-high. Hand `C[i]` back in the same order by raising `C_valid` with the element on `C_data`, then raise `done`. The
-stream cannot be paused or rewound: `C[i]` needs `A[i+1]`, so the circuit has to remember what it has seen.
-Registers are zero before `start`. The score is the number of cycles until `done` times the logic
-depth (the most gates on a path between registers) times the transistors of the synthesized circuit: smaller is
-better. The circuit must be synchronous: no latches, no asynchronous resets.
+Решение — модуль `solve` на SystemVerilog со входом `N` и двумя потоками. Проверяющая система поднимает `start`
+на первый такт и со следующего такта подаёт по одному элементу за такт: пока поднят `A_valid`, на `A_data` лежит
+`A[i]`. Отдавайте `C[i]` в том же порядке: поднимите `C_valid` и выставьте элемент на `C_data`; когда отданы все,
+поднимите `done`. Поток нельзя ни приостановить, ни перемотать: для `C[i]` нужен `A[i+1]`, так что схеме придётся
+помнить то, что она уже видела. До `start` все регистры равны нулю. Score — число тактов до `done`, умноженное
+на глубину логики (наибольшее число вентилей на пути между регистрами) и на число транзисторов синтезированной схемы:
+чем меньше, тем лучше. Схема должна быть синхронной: без защёлок и асинхронных сбросов.
 
-## On RISC-V (`riscv-rvv`)
+## На RISC-V (`riscv-rvv`)
 
-The same `solve` in C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors; the arrays are in ordinary memory.
-The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss: smaller is better.
+Та же `solve` на C, C++ или ассемблере RISC-V для RV64GCV с векторами по 256 бит; массивы лежат в обычной памяти.
+Score — число выполненных инструкций плюс 10 за каждый промах кэша L1 и 100 за каждый промах L2: чем меньше, тем
+лучше.
 
-## On the Coral NPU (`coral-npu`)
+## На Coral NPU (`coral-npu`)
 
-The same `solve` in C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x,
-Zve32f), no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data;
-the arrays lie in that data memory. The score is the instructions the core executed: smaller is better. In C++
-declare `N` as `int32_t`, as the solution template does: on this target `int32_t` is `long`, and a `solve` taking
-`int` would be another function.
+Та же `solve` на C или C++ для ядра Coral NPU без операционной системы: RV32IMF с Zbb и векторами по 128 бит (Zve32x,
+Zve32f), стандартной библиотеки C++ нет. У ядра 8 КБ памяти под код и 32 КБ под данные; массивы лежат в этой памяти
+данных. Score — число инструкций, выполненных ядром: чем меньше, тем лучше. В C++ объявляйте `N` как `int32_t`, как
+в шаблоне решения: на этой платформе `int32_t` — это `long`, и `solve` с параметром `int` будет другой функцией.
 
-## Example
+## Пример
 
 | A | C |
 | --- | --- |
 | 1 2 3 4 5 | 3 6 9 12 9 |
 
-## Constraints
+## Ограничения
 
-- 1 ≤ N ≤ 10 000 000 on the GPU, 1 ≤ N ≤ 4096 on `rtl`, 1 ≤ N ≤ 100 000 on `riscv-rvv` and `cuda-sim`,
-  1 ≤ N ≤ 3000 on `coral-npu`;
+- 1 ≤ N ≤ 10 000 000 на видеокарте, 1 ≤ N ≤ 4096 на `rtl`, 1 ≤ N ≤ 100 000 на `riscv-rvv` и `cuda-sim`,
+  1 ≤ N ≤ 3000 на `coral-npu`;
 - 0 ≤ A[i] ≤ 1 000 000;
-- the answer is compared exactly.
+- ответ сравнивается точно.

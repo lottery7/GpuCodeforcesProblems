@@ -1,6 +1,17 @@
-# GpuCodeforcesProblems
+<div align="center">
 
-Банк задач GPU Codeforces. Задача добавляется или меняется pull request'ом; backend платформы
+<img src=".github/logo.svg" width="56" height="56" alt="">
+
+# Банк задач GPU Forces
+
+**Двадцать задач для пяти процессоров: видеокарта, её симулятор, векторный RISC-V, Coral NPU и схемы на SystemVerilog.**
+
+[Платформа](https://github.com/lottery7/GpuCodeforces) · [Задачи](#задачи) · [Формат пакета](#формат-пакета)
+
+</div>
+
+Задачи платформы [GPU Forces](https://github.com/lottery7/GpuCodeforces) — соревнований, где мало решить задачу:
+её надо решить быстро на заданном процессоре. Задача добавляется или меняется pull request'ом; backend платформы
 забирает ветку `master` и импортирует каждый каталог `problems/<id>/`. Имя каталога — постоянный ID
 задачи (`[A-Za-z0-9._-]`), его нельзя менять после публикации.
 

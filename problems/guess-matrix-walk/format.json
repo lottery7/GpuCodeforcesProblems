@@ -1,8 +1,10 @@
 {
   "format": "guess",
-  "explanation": "The first code walks the matrix in the order it is stored: a 64-byte line of the cache serves sixteen elements in a row, so a line is missed once and then used fifteen more times. The second jumps a whole row ahead on every step, and once a column no longer fits the cache almost every element is a miss - 10 instructions of the score for an L1 miss and 100 for an L2 miss. Both loops execute the same instructions; the order of the memory accesses alone makes the walk by columns several times more expensive.",
+  "explanation": "Первый код обходит матрицу в том порядке, в котором она записана: 64-байтная линия кэша обслуживает шестнадцать элементов подряд, так что промах на ней случается один раз, а потом она используется ещё пятнадцать раз. Второй на каждом шаге перепрыгивает на целую строку вперёд, и как только столбец перестаёт помещаться в кэш, почти каждый элемент оборачивается промахом — 10 инструкций score за промах L1 и 100 за промах L2. Оба цикла выполняют одни и те же инструкции; один только порядок обращений к памяти делает обход по столбцам в несколько раз дороже.",
+  "explanationEn": "The first code walks the matrix in the order it is stored: a 64-byte line of the cache serves sixteen elements in a row, so a line is missed once and then used fifteen more times. The second jumps a whole row ahead on every step, and once a column no longer fits the cache almost every element is a miss - 10 instructions of the score for an L1 miss and 100 for an L2 miss. Both loops execute the same instructions; the order of the memory accesses alone makes the walk by columns several times more expensive.",
   "benchmark": {
-    "inputDescription": "Matrices of 768 x 768 and 1024 x 1024 ints, larger than the 1 MiB L2 cache of the model",
+    "inputDescription": "Матрицы 768 × 768 и 1024 × 1024 из int: они больше кэша L2 модели, в котором 1 МиБ",
+    "inputDescriptionEn": "Matrices of 768 x 768 and 1024 x 1024 ints, larger than the 1 MiB L2 cache of the model",
     "aggregation": "geometric_mean"
   }
 }

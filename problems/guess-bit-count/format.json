@@ -1,8 +1,10 @@
 {
   "format": "guess",
-  "explanation": "cpop counts the bits of a word in one instruction, yet the loop around it still loads, xors, counts and adds one word per iteration. The second code spends more instructions on a step - shifts, masks and a multiplication - but each of them works on 32 words at once: eight 128-bit registers grouped together hold 32 lanes. It executes about a tenth of the instructions of the first. A special instruction for one word loses to ordinary instructions over a vector.",
+  "explanation": "cpop считает биты слова одной инструкцией, но цикл вокруг неё всё равно на каждой итерации загружает, применяет xor, считает и прибавляет одно слово. Второй код тратит на шаг больше инструкций — сдвиги, маски и умножение, — но каждая из них работает сразу с 32 словами: восемь 128-битных регистров, сгруппированных вместе, вмещают 32 полосы. Он выполняет примерно десятую часть инструкций первого. Специальная инструкция для одного слова проигрывает обычным инструкциям над вектором.",
+  "explanationEn": "cpop counts the bits of a word in one instruction, yet the loop around it still loads, xors, counts and adds one word per iteration. The second code spends more instructions on a step - shifts, masks and a multiplication - but each of them works on 32 words at once: eight 128-bit registers grouped together hold 32 lanes. It executes about a tenth of the instructions of the first. A special instruction for one word loses to ordinary instructions over a vector.",
   "benchmark": {
-    "inputDescription": "Arrays of 1024 and 3000 random 32-bit words",
+    "inputDescription": "Массивы из 1024 и 3000 случайных 32-битных слов",
+    "inputDescriptionEn": "Arrays of 1024 and 3000 random 32-bit words",
     "aggregation": "geometric_mean"
   }
 }

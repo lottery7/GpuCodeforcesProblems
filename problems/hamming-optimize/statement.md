@@ -1,15 +1,15 @@
 ---
 code: "10"
-title: Speed Up the Bit Count
+title: Ускорьте подсчёт битов
 difficulty: easy
 tags: [bits, optimization]
 authors: []
 ---
 
-The editor holds a working Hamming distance for the Coral NPU core (`coral-npu`): it looks at the differing bits one
-at a time. Make it cheaper.
+В редакторе лежит работающее расстояние Хэмминга для ядра Coral NPU (`coral-npu`): оно перебирает различающиеся биты
+по одному. Сделайте его дешевле.
 
-`A` and `B` are arrays of `N` 32-bit words. `R[0]` receives the number of bit positions in which they differ:
+`A` и `B` — массивы из `N` 32-битных слов. В `R[0]` попадает число битовых позиций, в которых они различаются:
 
 ```
 R[0] = popcount(A[0] ^ B[0]) + ... + popcount(A[N - 1] ^ B[N - 1])
@@ -19,21 +19,20 @@ R[0] = popcount(A[0] ^ B[0]) + ... + popcount(A[N - 1] ^ B[N - 1])
 void solve(const uint32_t* A, const uint32_t* B, uint32_t* R, int32_t N);
 ```
 
-The solution is C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x, Zve32f),
-no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data; the arrays
-lie in that data memory. The score is the instructions the core executed, shown next to the score of the original
-code: smaller is better. Zbb counts the bits of a word in one instruction - and that is not the end of the road.
-In C++ declare `N` as `int32_t`: on this target `int32_t` is `long`, and a `solve` taking `int` would be another
-function.
+Решение пишется на C или C++ для ядра Coral NPU без операционной системы: RV32IMF с Zbb и векторами по 128 бит
+(Zve32x, Zve32f), стандартной библиотеки C++ нет. У ядра 8 КБ памяти под код и 32 КБ под данные; массивы лежат в этой
+памяти данных. Score — число инструкций, выполненных ядром, он показан рядом со score исходного кода: чем меньше, тем
+лучше. Zbb считает биты слова одной инструкцией — и это ещё не предел. В C++ объявляйте `N` как `int32_t`: на этой
+платформе `int32_t` — это `long`, и `solve` с параметром `int` будет другой функцией.
 
-## Example
+## Пример
 
 | A | B | R |
 | --- | --- | --- |
 | 0 255 5 | 1 15 5 | 5 |
 
-## Constraints
+## Ограничения
 
 - 1 ≤ N ≤ 3000;
-- the words take any 32-bit value;
-- the answer is compared exactly.
+- слова принимают любые 32-битные значения;
+- ответ сравнивается точно.

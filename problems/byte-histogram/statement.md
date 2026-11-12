@@ -1,58 +1,59 @@
 ---
 code: "6"
-title: Byte Histogram
+title: Гистограмма байтов
 difficulty: medium
 tags: [histogram, bytes]
 authors: []
 ---
 
-Count how many times every byte value occurs: on the GPU (`gpu-cuda`), on a simulated GPU (`cuda-sim`), on a vector
-RISC-V CPU (`riscv-rvv`) or on the Coral NPU core (`coral-npu`).
+Посчитайте, сколько раз встречается каждое значение байта: на видеокарте (`gpu-cuda`), на её симуляторе (`cuda-sim`),
+на векторном процессоре RISC-V (`riscv-rvv`) или на ядре Coral NPU (`coral-npu`).
 
-Given `N` bytes `A`, fill the 256 counters
+Даны `N` байтов `A`. Заполните 256 счётчиков
 
 ```
-H[v] = the number of i with A[i] == v,    v = 0 ... 255
+H[v] = число таких i, что A[i] == v,    v = 0 ... 255
 ```
 
-Implement the function
+Реализуйте функцию
 
 ```cpp
 void solve(const uint8_t* A, uint32_t* H, int N);
 ```
 
-`A` and `H` point to GPU memory. `solve` runs on the CPU: it launches the kernels and returns, the judge synchronizes
-afterwards. `H` holds garbage before the call: every counter has to be written, the zero ones too.
+`A` и `H` лежат в памяти GPU. `solve` выполняется на CPU: она запускает ядра и возвращается, проверяющая система сама
+дожидается их завершения. Перед вызовом в `H` лежит мусор: записать нужно каждый счётчик, в том числе нулевые.
 
-Unlike a sum, a histogram writes to a place that depends on the data: threads of a GPU collide on a counter, and
-lanes of a vector cannot update the same counter at once.
+В отличие от суммы, гистограмма пишет в место, которое зависит от данных: потоки видеокарты сталкиваются на одном
+счётчике, а полосы вектора не могут обновить один и тот же счётчик одновременно.
 
-## On the GPU simulator (`cuda-sim`)
+## На симуляторе GPU (`cuda-sim`)
 
-The same CUDA `solve`, run in GPGPU-Sim on a model of the NVIDIA Tesla V100 (QV100). The score is the simulated GPU
-cycles: smaller is better. `cudaMemcpy*` and warp shuffles (`__shfl_*_sync`) are not allowed in the solution.
+Та же `solve` на CUDA исполняется в GPGPU-Sim на модели NVIDIA Tesla V100 (QV100). Score — число тактов симулируемой
+видеокарты: чем меньше, тем лучше. `cudaMemcpy*` и обмен между потоками варпа (`__shfl_*_sync`) в решении запрещены.
 
-## On RISC-V (`riscv-rvv`)
+## На RISC-V (`riscv-rvv`)
 
-The same `solve` in C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors; the arrays are in ordinary memory.
-The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss: smaller is better.
+Та же `solve` на C, C++ или ассемблере RISC-V для RV64GCV с векторами по 256 бит; массивы лежат в обычной памяти.
+Score — число выполненных инструкций плюс 10 за каждый промах кэша L1 и 100 за каждый промах L2: чем меньше, тем
+лучше.
 
-## On the Coral NPU (`coral-npu`)
+## На Coral NPU (`coral-npu`)
 
-The same `solve` in C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x,
-Zve32f), no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data;
-the arrays lie in that data memory, next to the globals and the stack of the solution. The score is the instructions
-the core executed: smaller is better. In C++ declare `N` as `int32_t`, as the solution template does: on this target
-`int32_t` is `long`, and a `solve` taking `int` would be another function.
+Та же `solve` на C или C++ для ядра Coral NPU без операционной системы: RV32IMF с Zbb и векторами по 128 бит (Zve32x,
+Zve32f), стандартной библиотеки C++ нет. У ядра 8 КБ памяти под код и 32 КБ под данные; массивы лежат в этой памяти
+данных, рядом с глобальными переменными и стеком решения. Score — число инструкций, выполненных ядром: чем меньше, тем
+лучше. В C++ объявляйте `N` как `int32_t`, как в шаблоне решения: на этой платформе `int32_t` — это `long`, и `solve`
+с параметром `int` будет другой функцией.
 
-## Example
+## Пример
 
 | A | H |
 | --- | --- |
-| 3 0 3 255 3 0 | H[0] = 2, H[3] = 3, H[255] = 1, the other 253 counters are 0 |
+| 3 0 3 255 3 0 | H[0] = 2, H[3] = 3, H[255] = 1, остальные 253 счётчика равны 0 |
 
-## Constraints
+## Ограничения
 
-- 1 ≤ N ≤ 50 000 000 on the GPU, 1 ≤ N ≤ 200 000 on `riscv-rvv`, 1 ≤ N ≤ 20 000 on `cuda-sim` and `coral-npu`;
-- the bytes take any value, all of them may be equal;
-- the answer is compared exactly.
+- 1 ≤ N ≤ 50 000 000 на видеокарте, 1 ≤ N ≤ 200 000 на `riscv-rvv`, 1 ≤ N ≤ 20 000 на `cuda-sim` и `coral-npu`;
+- байты принимают любые значения, все они могут быть равны;
+- ответ сравнивается точно.

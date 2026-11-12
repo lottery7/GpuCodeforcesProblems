@@ -1,13 +1,13 @@
 ---
 code: "11"
-title: Rows or Columns
+title: Строки или столбцы
 difficulty: easy
 tags: [matrix, cache, guess]
 authors: []
 ---
 
-Both codes add up all the elements of a square matrix on a vector RISC-V CPU (`riscv-rvv`). The matrix of `N` rows
-and `N` columns is stored row by row, and the two loops differ only in the order of the walk. Which one costs less?
+Оба кода складывают все элементы квадратной матрицы на векторном процессоре RISC-V (`riscv-rvv`). Матрица из `N` строк
+и `N` столбцов записана по строкам, и два цикла отличаются только порядком обхода. Какой из них дешевле?
 
-The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss; the cache model has a 32 KiB L1 and
-a 1 MiB L2 with 64-byte lines. Both codes are compiled with the same optimizing compiler.
+Score — число выполненных инструкций плюс 10 за каждый промах кэша L1 и 100 за каждый промах L2; в модели кэша L1
+на 32 КиБ и L2 на 1 МиБ с линиями по 64 байта. Оба кода собраны одним и тем же оптимизирующим компилятором.

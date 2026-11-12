@@ -1,0 +1,24 @@
+{
+  "id": "alpha-blend",
+  "allowCustomTests": true,
+  "signature": {
+    "function": "solve",
+    "params": [
+      {"name": "A", "type": "UINT8", "role": "INPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "B", "type": "UINT8", "role": "INPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "T", "type": "UINT8", "role": "INPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "C", "type": "UINT8", "role": "OUTPUT", "memory": "DEVICE", "size": "N"},
+      {"name": "N", "type": "INT32", "role": "SCALAR"}
+    ]
+  },
+  "checker": {"mode": "EXACT"},
+  "limits": {"timeLimitMs": 1000, "memoryLimitMb": 4096, "gpuMemoryLimitMb": 2048},
+  "timing": {"warmupRuns": 1, "maxRuns": 3},
+  "processors": [
+    {"id": "gpu-cuda", "languages": ["cuda"]},
+    {"id": "rtl", "languages": ["systemverilog"], "limit": 2400000000, "rtl": {"dataMode": "STREAM"}},
+    {"id": "riscv-rvv", "languages": ["c", "cpp", "asm"], "limit": 4200000},
+    {"id": "cuda-sim", "languages": ["cuda"], "limit": 15000},
+    {"id": "coral-npu", "languages": ["c", "cpp"], "limit": 240000}
+  ]
+}

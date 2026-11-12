@@ -1,14 +1,16 @@
 ---
 code: "9"
-title: Speed Up the Transpose
+title: Ускорьте транспонирование
 difficulty: medium
 tags: [matrix, cache, optimization]
 authors: []
 ---
 
-The editor holds a working transpose for a vector RISC-V CPU (`riscv-rvv`). It is correct and slow: make it cheaper.
+В редакторе лежит работающее транспонирование для векторного процессора RISC-V (`riscv-rvv`). Оно верное и медленное:
+сделайте его дешевле.
 
-`A` is a matrix of `N` rows and `M` columns stored row by row; `B` receives its transpose, `M` rows of `N` columns:
+`A` — матрица из `N` строк и `M` столбцов, записанная по строкам; в `B` попадает транспонированная матрица, `M` строк
+по `N` столбцов:
 
 ```
 B[j * N + i] = A[i * M + j]
@@ -18,18 +20,19 @@ B[j * N + i] = A[i * M + j]
 void solve(const float* A, float* B, int32_t N, int32_t M);
 ```
 
-The solution is C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors. The score is the instructions executed
-plus 10 per L1 miss and 100 per L2 miss, and the page shows it next to the score of the original code: smaller is
-better. The original loop executes few instructions per element - look at where the rest of its score comes from.
-The cache model has a 32 KiB L1 and a 1 MiB L2 with 64-byte lines, and the measured matrices are larger than both.
+Решение пишется на C, C++ или ассемблере RISC-V для RV64GCV с векторами по 256 бит. Score — число выполненных
+инструкций плюс 10 за каждый промах кэша L1 и 100 за каждый промах L2, и страница показывает его рядом со score
+исходного кода: чем меньше, тем лучше. Исходный цикл выполняет мало инструкций на элемент — посмотрите, откуда берётся
+остальная часть его score. В модели кэша L1 на 32 КиБ и L2 на 1 МиБ с линиями по 64 байта, и матрицы, на которых идёт
+замер, больше обоих.
 
-## Example
+## Пример
 
 | N | M | A | B |
 | --- | --- | --- | --- |
 | 2 | 3 | 1 2 3 4 5 6 | 1 4 2 5 3 6 |
 
-## Constraints
+## Ограничения
 
 - 1 ≤ N, M ≤ 1024;
-- the answer is compared exactly.
+- ответ сравнивается точно.

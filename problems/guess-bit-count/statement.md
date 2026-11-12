@@ -1,14 +1,13 @@
 ---
 code: "12"
-title: One Instruction or Thirty-Two Lanes
+title: Одна инструкция или тридцать две полосы
 difficulty: medium
 tags: [bits, vectors, guess]
 authors: []
 ---
 
-Both codes count the bits in which two arrays of 32-bit words differ, on the Coral NPU core (`coral-npu`): RV32IMF
-with Zbb and 128-bit vectors. The first relies on `cpop`, the Zbb instruction that counts the bits of a word. The
-second never uses it: it counts bits with shifts, masks and a multiplication, in vector registers. Which one costs
-less?
+Оба кода считают биты, в которых различаются два массива 32-битных слов, на ядре Coral NPU (`coral-npu`): RV32IMF
+с Zbb и векторами по 128 бит. Первый полагается на `cpop` — инструкцию Zbb, которая считает биты слова. Второй
+не использует её вовсе: он считает биты сдвигами, масками и умножением в векторных регистрах. Какой из них дешевле?
 
-The score is the instructions the core executed.
+Score — число инструкций, выполненных ядром.

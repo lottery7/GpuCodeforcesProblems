@@ -1,62 +1,61 @@
 ---
 code: "8"
-title: Greatest Common Divisor
+title: Наибольший общий делитель
 difficulty: easy
 tags: [numbers, rtl]
 authors: []
 ---
 
-Compute greatest common divisors: as a circuit (`rtl`), on a vector RISC-V CPU (`riscv-rvv`) or on the Coral NPU
-core (`coral-npu`).
+Вычислите наибольшие общие делители: как схему (`rtl`), на векторном процессоре RISC-V (`riscv-rvv`) или на ядре
+Coral NPU (`coral-npu`).
 
-Given two arrays `A` and `B` of `N` positive integers, calculate
+Даны два массива `A` и `B` из `N` положительных целых чисел. Вычислите
 
 ```
 C[i] = gcd(A[i], B[i])
 ```
 
-Implement the function
+Реализуйте функцию
 
 ```cpp
 void solve(const uint32_t* A, const uint32_t* B, uint32_t* C, int32_t N);
 ```
 
-The algorithm is twenty-three centuries old; what it costs depends on what the processor can do in one step. A
-remainder is one instruction on a CPU and a large slow block in a circuit, while a shift is free in a circuit and a
-comparison is cheap.
+Алгоритму двадцать три века; сколько он стоит, зависит от того, что процессор умеет делать за один шаг. Остаток
+от деления — одна инструкция на CPU и большой медленный блок в схеме, зато сдвиг в схеме бесплатен, а сравнение
+дёшево.
 
-## As a circuit (`rtl`)
+## Как схема (`rtl`)
 
-The submission is a SystemVerilog module `solve`. `A`, `B` and `C` are memories of the judge: put an index on
-`A_addr` and the element arrives on `A_data` on the next cycle; write `C[C_addr] = C_data` by raising `C_write`.
-The judge raises `start` for the first cycle; raise `done` once every element of `C` is written. Registers are zero
-before `start`. The score is the number of cycles times the logic depth (the most gates on a path between registers)
-times the transistors of the synthesized circuit: smaller is better. The tests hold pairs such as `(1, 1000000000)`:
-a circuit that only subtracts the smaller number from the larger would spend a billion cycles on one of them. The
-circuit must be synchronous: no latches, no asynchronous resets.
+Решение — модуль `solve` на SystemVerilog. `A`, `B` и `C` — память проверяющей системы: выставьте индекс на `A_addr`,
+и на следующем такте элемент придёт на `A_data`; запись `C[C_addr] = C_data` происходит на такте, где поднят
+`C_write`. Проверяющая система поднимает `start` на первый такт; поднимите `done`, когда записаны все элементы `C`.
+До `start` все регистры равны нулю. Score — число тактов, умноженное на глубину логики (наибольшее число вентилей
+на пути между регистрами) и на число транзисторов синтезированной схемы: чем меньше, тем лучше. В тестах есть пары
+вроде `(1, 1000000000)`: схема, которая только вычитает меньшее число из большего, потратит на одну такую пару
+миллиард тактов. Схема должна быть синхронной: без защёлок и асинхронных сбросов.
 
-## On RISC-V (`riscv-rvv`)
+## На RISC-V (`riscv-rvv`)
 
-The same `solve` in C, C++ or RISC-V assembly for RV64GCV with 256-bit vectors; the arrays are in ordinary memory.
-The score is the instructions executed plus 10 per L1 miss and 100 per L2 miss: smaller is better. A division is one
-instruction here, as cheap as an addition.
+Та же `solve` на C, C++ или ассемблере RISC-V для RV64GCV с векторами по 256 бит; массивы лежат в обычной памяти.
+Score — число выполненных инструкций плюс 10 за каждый промах кэша L1 и 100 за каждый промах L2: чем меньше, тем
+лучше. Деление здесь — одна инструкция, такая же дешёвая, как сложение.
 
-## On the Coral NPU (`coral-npu`)
+## На Coral NPU (`coral-npu`)
 
-The same `solve` in C or C++ for the Coral NPU core, bare metal: RV32IMF with Zbb and 128-bit vectors (Zve32x,
-Zve32f), no operating system and no C++ standard library. The core has 8 KB of memory for code and 32 KB for data;
-the arrays lie in that data memory. The score is the instructions the core executed: smaller is better. In C++
-declare `N` as `int32_t`, as the solution template does: on this target `int32_t` is `long`, and a `solve` taking
-`int` would be another function.
+Та же `solve` на C или C++ для ядра Coral NPU без операционной системы: RV32IMF с Zbb и векторами по 128 бит (Zve32x,
+Zve32f), стандартной библиотеки C++ нет. У ядра 8 КБ памяти под код и 32 КБ под данные; массивы лежат в этой памяти
+данных. Score — число инструкций, выполненных ядром: чем меньше, тем лучше. В C++ объявляйте `N` как `int32_t`, как
+в шаблоне решения: на этой платформе `int32_t` — это `long`, и `solve` с параметром `int` будет другой функцией.
 
-## Example
+## Пример
 
 | A | B | C |
 | --- | --- | --- |
 | 12 17 1000000000 7 | 18 5 400000000 7 | 6 1 200000000 7 |
 
-## Constraints
+## Ограничения
 
-- 1 ≤ N ≤ 256 on `rtl`, 1 ≤ N ≤ 50 000 on `riscv-rvv`, 1 ≤ N ≤ 2000 on `coral-npu`;
+- 1 ≤ N ≤ 256 на `rtl`, 1 ≤ N ≤ 50 000 на `riscv-rvv`, 1 ≤ N ≤ 2000 на `coral-npu`;
 - 1 ≤ A[i], B[i] ≤ 1 000 000 000;
-- the answer is compared exactly.
+- ответ сравнивается точно.
